@@ -21,6 +21,7 @@ async function run() {
   await client.connect();
   const database = client.db('teaHerbs');
   const productCollection = database.collection('products');
+  const ordersCollection = database.collection('orders')
 
   // GET PRODUCTS API
   app.get('/products', async (req, res) => {
@@ -32,11 +33,19 @@ async function run() {
   // GET SINGLE PRODUCT
   app.get('/products/:id', async (req, res) => {
    const id = req.params.id;
-   console.log('getting one product', id)
+   // console.log('getting one product', id)
    const query = { _id: ObjectId(id) }
    const product = await productCollection.findOne(query);
    res.json(product);
   });
+
+  // GET ORDERS
+  app.post('/orders', async (req, res) => {
+   const order = req.body;
+   const result = await ordersCollection.insertOne(order)
+   console.log(result);
+   res.json(result)
+  })
 
  }
  finally {
